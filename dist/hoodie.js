@@ -5,6 +5,8 @@
 
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var o;"undefined"!=typeof window?o=window:"undefined"!=typeof global?o=global:"undefined"!=typeof self&&(o=self),o.Hoodie=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -54,6 +56,8 @@ Promise.prototype.any = function Promise$any() {
 },{}],2:[function(_dereq_,module,exports){
 (function (process){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -168,6 +172,8 @@ module.exports = new Async();
 }).call(this,_dereq_("FWaASH"))
 },{"./queue.js":25,"./schedule.js":28,"./util.js":35,"FWaASH":37}],3:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -194,6 +200,8 @@ var Promise = _dereq_("./promise.js")();
 module.exports = Promise;
 },{"./promise.js":20}],4:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -315,6 +323,8 @@ Promise.prototype.get = function Promise$get(propertyName) {
 
 },{"./util.js":35}],5:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -351,6 +361,7 @@ Promise.prototype._cancel = function Promise$_cancel(reason) {
         parent.isCancellable()) {
         promiseToReject = parent;
     }
+    this._unsetCancellable();
     promiseToReject._attachExtraTrace(reason);
     promiseToReject._rejectUnchecked(reason);
 };
@@ -392,6 +403,8 @@ function Promise$fork(didFulfill, didReject, didProgress) {
 
 },{"./async.js":2,"./errors.js":10}],6:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -494,12 +507,21 @@ function CapturedTrace$PossiblyUnhandledRejection(reason) {
 };
 
 CapturedTrace.combine = function CapturedTrace$Combine(current, prev) {
-    var curLast = current.length - 1;
+    var currentLastIndex = current.length - 1;
+    var currentLastLine = current[currentLastIndex];
+    var commonRootMeetPoint = -1;
     for (var i = prev.length - 1; i >= 0; --i) {
+        if (prev[i] === currentLastLine) {
+            commonRootMeetPoint = i;
+            break;
+        }
+    }
+
+    for (var i = commonRootMeetPoint; i >= 0; --i) {
         var line = prev[i];
-        if (current[curLast] === line) {
+        if (current[currentLastIndex] === line) {
             current.pop();
-            curLast--;
+            currentLastIndex--;
         } else {
             break;
         }
@@ -557,13 +579,6 @@ var captureStackTrace = (function stackDetection() {
             return formatNonError(error);
 
 
-<<<<<<< HEAD
-  // set bearerToken from config (local store)
-  hoodie.account.bearerToken = utils.config.get('_account.bearerToken');
-
-  // init hoodie.remote API
-  hoodie.remote.init();
-=======
         };
         var captureStackTrace = Error.captureStackTrace;
         return function CapturedTrace$_captureStackTrace(
@@ -572,7 +587,6 @@ var captureStackTrace = (function stackDetection() {
         };
     }
     var err = new Error();
->>>>>>> 2.0.0
 
     if (typeof err.stack === "string" &&
         typeof "".startsWith === "function" &&
@@ -635,6 +649,8 @@ return CapturedTrace;
 
 },{"./es5.js":12,"./util.js":35}],7:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -731,6 +747,8 @@ return CatchFilter;
 
 },{"./errors.js":10,"./es5.js":12,"./util.js":35}],8:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -811,6 +829,8 @@ function Promise$thenThrow(reason) {
 
 },{"./util.js":35}],9:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -847,6 +867,8 @@ Promise.each = function Promise$Each(promises, fn) {
 
 },{}],10:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -994,6 +1016,8 @@ module.exports = {
 
 },{"./es5.js":12,"./util.js":35}],11:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1034,6 +1058,8 @@ return apiRejection;
 
 },{"./errors.js":10}],12:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1093,15 +1119,6 @@ if (isES5) {
         return obj;
     }
 
-<<<<<<< HEAD
-    return sendSignUpRequest(username, password)
-    .done(function(newUsername, newHoodieId, newBearerToken) {
-      setUsername(username);
-      setBearerToken(newBearerToken);
-      account.trigger('signup', username);
-    });
-  };
-=======
     var ObjectGetPrototypeOf = function ObjectGetPrototypeOf(obj) {
         try {
             return Object(obj).constructor.prototype;
@@ -1110,7 +1127,6 @@ if (isES5) {
             return proto;
         }
     }
->>>>>>> 2.0.0
 
     var ArrayIsArray = function ArrayIsArray(obj) {
         try {
@@ -1133,6 +1149,8 @@ if (isES5) {
 
 },{}],13:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1169,6 +1187,8 @@ Promise.filter = function Promise$Filter(promises, fn, options) {
 
 },{}],14:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1291,6 +1311,8 @@ Promise.prototype.tap = function Promise$tap(handler) {
 
 },{"./util.js":35}],15:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1369,19 +1391,6 @@ PromiseSpawn.prototype._continue = function PromiseSpawn$_continue(result) {
         return;
     }
 
-<<<<<<< HEAD
-    return promise.done( function(newUsername, newHoodieId, newBearerToken) {
-      if (options.moveData) {
-        account.trigger('movedata');
-      }
-      if (!isReauthenticating && !options.moveData) {
-        cleanup();
-      }
-      setBearerToken(newBearerToken);
-      if (isReauthenticating) {
-        if (!isSilent) {
-          account.trigger('reauthenticated', newUsername);
-=======
     var value = result.value;
     if (result.done === true) {
         this._generator = void 0;
@@ -1397,7 +1406,6 @@ PromiseSpawn.prototype._continue = function PromiseSpawn$_continue(result) {
                 this._throw(new TypeError("A value was yielded that could not be treated as a promise"));
                 return;
             }
->>>>>>> 2.0.0
         }
         maybePromise._then(
             this._next,
@@ -1439,19 +1447,10 @@ function Promise$Coroutine(generatorFunction, options) {
     };
 };
 
-<<<<<<< HEAD
-    if (options.moveData) {
-      return sendSignOutRequest();
-    }
-
-    return pushLocalChanges(options).then(disconnect).then(sendSignOutRequest).then(cleanupMethod);
-  };
-=======
 Promise.coroutine.addYieldHandler = function(fn) {
     if (typeof fn !== "function") throw new TypeError("fn must be a function");
     yieldHandlers.push(fn);
 };
->>>>>>> 2.0.0
 
 Promise.spawn = function Promise$Spawn(generatorFunction) {
     deprecated("Promise.spawn is deprecated. Use Promise.coroutine instead.");
@@ -1467,6 +1466,8 @@ Promise.spawn = function Promise$Spawn(generatorFunction) {
 
 },{"./errors.js":10,"./util.js":35}],16:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1548,8 +1549,9 @@ if (canEvaluate) {
     };
 }
 
-
-
+function reject(reason) {
+    this._reject(reason);
+}
 
 Promise.join = function Promise$Join() {
     var last = arguments.length - 1;
@@ -1560,7 +1562,6 @@ Promise.join = function Promise$Join() {
             var ret = new Promise(INTERNAL);
             ret._setTrace(void 0);
             var holder = new Holder(last, fn);
-            var reject = ret._reject;
             var callbacks = thenCallbacks;
             for (var i = 0; i < last; ++i) {
                 var maybePromise = cast(arguments[i], void 0);
@@ -1591,6 +1592,8 @@ Promise.join = function Promise$Join() {
 
 },{"./util.js":35}],17:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1742,6 +1745,8 @@ Promise.map = function Promise$Map(promises, fn, options, _filter) {
 
 },{"./util.js":35}],18:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1820,6 +1825,8 @@ Promise.prototype.nodeify = function Promise$nodeify(nodeback, options) {
 
 },{"./async.js":2,"./util.js":35}],19:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -1935,6 +1942,8 @@ function Promise$_progressUnchecked(progressValue) {
 },{"./async.js":2,"./errors.js":10,"./util.js":35}],20:[function(_dereq_,module,exports){
 (function (process){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -2060,8 +2069,7 @@ function Promise$catch(fn) {
                         + "or a filter function");
 
                 this._attachExtraTrace(catchFilterTypeError);
-                async.invoke(this._reject, this, catchFilterTypeError);
-                return;
+                return Promise.reject(catchFilterTypeError);
             }
         }
         catchInstances.length = j;
@@ -2073,6 +2081,14 @@ function Promise$catch(fn) {
             catchFilter, void 0);
     }
     return this._then(void 0, fn, void 0, void 0, void 0);
+};
+
+function reflect() {
+    return new Promise.PromiseInspection(this);
+}
+
+Promise.prototype.reflect = function Promise$reflect() {
+    return this._then(reflect, reflect, void 0, this, void 0);
 };
 
 Promise.prototype.then =
@@ -2138,7 +2154,9 @@ function Promise$_resolveFromSyncValue(value) {
     if (value === errorObj) {
         this._cleanValues();
         this._setRejected();
-        this._settledValue = value.e;
+        var reason = value.e;
+        this._settledValue = reason;
+        this._tryAttachExtraTrace(reason);
         this._ensurePossibleRejectionHandled();
     } else {
         var maybePromise = cast(value, void 0);
@@ -2152,17 +2170,6 @@ function Promise$_resolveFromSyncValue(value) {
     }
 };
 
-<<<<<<< HEAD
-  function setBearerToken(newBearerToken) {
-    if (account.bearerToken === newBearerToken) {
-      return;
-    }
-
-    account.bearerToken = newBearerToken;
-    return config.set('_account.bearerToken', newBearerToken);
-  }
-
-=======
 Promise.method = function Promise$_Method(fn) {
     if (typeof fn !== "function") {
         throw new TypeError("fn must be a function");
@@ -2183,7 +2190,6 @@ Promise.method = function Promise$_Method(fn) {
         return ret;
     };
 };
->>>>>>> 2.0.0
 
 Promise.attempt = Promise["try"] = function Promise$_Try(fn, args, ctx) {
     if (typeof fn !== "function") {
@@ -2608,6 +2614,7 @@ function Promise$_settlePromiseFromHandler(
         handler.call(receiver, value, promise);
         return;
     }
+    if (promise.isResolved()) return;
     var x = this._callHandler(handler, receiver, promise, value);
     if (promise._isFollowing()) return;
 
@@ -2691,6 +2698,13 @@ Promise.prototype._setTrace = function Promise$_setTrace(parent) {
         }
     }
     return this;
+};
+
+Promise.prototype._tryAttachExtraTrace =
+function Promise$_tryAttachExtraTrace(error) {
+    if (canAttach(error)) {
+        this._attachExtraTrace(error);
+    }
 };
 
 Promise.prototype._attachExtraTrace =
@@ -3027,6 +3041,8 @@ return Promise;
 }).call(this,_dereq_("FWaASH"))
 },{"./any.js":1,"./async.js":2,"./call_get.js":4,"./cancel.js":5,"./captured_trace.js":6,"./catch_filter.js":7,"./direct_resolve.js":8,"./each.js":9,"./errors.js":10,"./errors_api_rejection":11,"./filter.js":13,"./finally.js":14,"./generators.js":15,"./join.js":16,"./map.js":17,"./nodeify.js":18,"./progress.js":19,"./promise_array.js":21,"./promise_resolver.js":22,"./promisify.js":23,"./props.js":24,"./race.js":26,"./reduce.js":27,"./settle.js":29,"./some.js":30,"./synchronous_inspection.js":31,"./thenables.js":32,"./timers.js":33,"./using.js":34,"./util.js":35,"FWaASH":37}],21:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3231,6 +3247,8 @@ return PromiseArray;
 
 },{"./errors.js":10,"./util.js":35}],22:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3391,6 +3409,8 @@ module.exports = PromiseResolver;
 
 },{"./async.js":2,"./errors.js":10,"./es5.js":12,"./util.js":35}],23:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3530,26 +3550,26 @@ function makeNodePromisifiedEval(callback, receiver, originalName, fn, suffix) {
         var ret;
         if (typeof callback === "string") {
             ret = "                                                          \n\
-                this.method(args, fn);                                       \n\
+                this.method({{args}}, fn);                                   \n\
                 break;                                                       \n\
             ".replace(".method", generatePropertyAccess(callback));
         } else if (receiver === THIS) {
             ret =  "                                                         \n\
-                callback.call(this, args, fn);                               \n\
+                callback.call(this, {{args}}, fn);                           \n\
                 break;                                                       \n\
             ";
         } else if (receiver !== void 0) {
             ret =  "                                                         \n\
-                callback.call(receiver, args, fn);                           \n\
+                callback.call(receiver, {{args}}, fn);                       \n\
                 break;                                                       \n\
             ";
         } else {
             ret =  "                                                         \n\
-                callback(args, fn);                                          \n\
+                callback({{args}}, fn);                                      \n\
                 break;                                                       \n\
             ";
         }
-        return ret.replace("args", args).replace(", ", comma);
+        return ret.replace("{{args}}", args).replace(", ", comma);
     }
 
     function generateArgumentSwitchCase() {
@@ -3719,6 +3739,8 @@ Promise.promisifyAll = function Promise$PromisifyAll(target, options) {
 
 },{"./errors":10,"./promise_resolver.js":22,"./util.js":35}],24:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3829,6 +3851,8 @@ Promise.props = function Promise$Props(promises) {
 
 },{"./errors_api_rejection":11,"./es5.js":12,"./util.js":35}],25:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3946,6 +3970,8 @@ module.exports = Queue;
 
 },{}],26:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4020,6 +4046,8 @@ Promise.prototype.race = function Promise$race() {
 
 },{"./errors_api_rejection.js":11,"./util.js":35}],27:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4204,6 +4232,8 @@ Promise.reduce = function Promise$Reduce(promises, fn, initialValue, _each) {
 },{"./util.js":35}],28:[function(_dereq_,module,exports){
 (function (process){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4268,6 +4298,8 @@ module.exports = schedule;
 }).call(this,_dereq_("FWaASH"))
 },{"FWaASH":37}],29:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4337,6 +4369,8 @@ Promise.prototype.settle = function Promise$settle() {
 
 },{"./util.js":35}],30:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4500,6 +4534,8 @@ Promise._SomePromiseArray = SomePromiseArray;
 
 },{"./errors.js":10,"./util.js":35}],31:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4578,6 +4614,8 @@ Promise.PromiseInspection = PromiseInspection;
 
 },{}],32:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4713,6 +4751,8 @@ return Promise$_Cast;
 
 },{"./errors.js":10,"./util.js":35}],33:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4740,7 +4780,7 @@ var _setTimeout = function(fn, ms) {
     var arg0 = arguments[2];
     var arg1 = arguments[3];
     var arg2 = len >= 5 ? arguments[4] : void 0;
-    setTimeout(function() {
+    return setTimeout(function() {
         fn(arg0, arg1, arg2);
     }, ms|0);
 };
@@ -4792,20 +4832,37 @@ Promise.prototype.delay = function Promise$delay(ms) {
     return delay(this, ms);
 };
 
+function successClear(value) {
+    var handle = this;
+    if (handle instanceof Number) handle = +handle;
+    clearTimeout(handle);
+    return value;
+}
+
+function failureClear(reason) {
+    var handle = this;
+    if (handle instanceof Number) handle = +handle;
+    clearTimeout(handle);
+    throw reason;
+}
+
 Promise.prototype.timeout = function Promise$timeout(ms, message) {
     ms = +ms;
 
     var ret = new Promise(INTERNAL);
     ret._propagateFrom(this, 7);
     ret._follow(this);
-    _setTimeout(afterTimeout, ms, ret, message, ms);
-    return ret.cancellable();
+    var handle = _setTimeout(afterTimeout, ms, ret, message, ms);
+    return ret.cancellable()
+              ._then(successClear, failureClear, void 0, handle, void 0);
 };
 
 };
 
 },{"./errors.js":10,"./errors_api_rejection":11,"./util.js":35}],34:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4998,6 +5055,8 @@ module.exports = function (Promise, apiRejection, cast) {
 
 },{"./errors.js":10,"./util.js":35}],35:[function(_dereq_,module,exports){
 /**
+ * The MIT License (MIT)
+ * 
  * Copyright (c) 2014 Petka Antonov
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -6342,36 +6401,6 @@ if (typeof Object.create === 'function') {
 var EventEmitter = _dereq_('events').EventEmitter,
     util  = _dereq_('util');
 
-<<<<<<< HEAD
-  //
-  // parse a successful sign in response from couchDB.
-  // Response looks like:
-  //
-  //     {
-  //         'ok': true,
-  //         'name': 'test1',
-  //         'roles': [
-  //             'mvu85hy',
-  //             'confirmed'
-  //         ],
-  //         'bearerToken': 'dXNlci2Mjow9N2Rh2WyZfioB1ubEsc5n9taWNoaWVsMjo1MzkxOEQKpdFA'
-  //     }
-  //
-  // we want to turn it into 'test1', 'mvu85hy', 'dXNlci2Mjow9N2Rh2WyZfioB1ubEsc5n9taWNoaWVsMjo1MzkxOEQKpdFA'
-  // or reject the promise in case an error occurred ('roles' array contains 'error' or is empty)
-  //
-  function handleSignInSuccess(options) {
-    options = options || {};
-
-    return function(response) {
-      var newUsername;
-      var newHoodieId;
-      var newBearerToken;
-
-      newUsername = response.name.replace(/^user(_anonymous)?\//, '');
-      newHoodieId = response.roles[0];
-      newBearerToken = response.bearerToken;
-=======
 function JqueryEmitter() {
     this.emitting = false;
     
@@ -6394,7 +6423,6 @@ function nsMatch(nsIn, nsRegistered) {
     
     return match;
 }
->>>>>>> 2.0.0
 
 JqueryEmitter.prototype.emit = function(type) {
     var args = arguments,
@@ -6463,13 +6491,6 @@ JqueryEmitter.prototype.addListener = function(type, listener) {
     return EventEmitter.prototype.addListener.call(this, type, listener);
 }
 
-<<<<<<< HEAD
-      setBearerToken(newBearerToken);
-      account.fetch();
-      return resolveWith(newUsername, newHoodieId, newBearerToken, options);
-    };
-  }
-=======
 JqueryEmitter.prototype.on = function(type, listener) {
     var isArray = Array.isArray(type),
         _this   = this,
@@ -6491,7 +6512,6 @@ JqueryEmitter.prototype.on = function(type, listener) {
         EventEmitter.prototype.addListener.call(this, type, listener);
     }           
 }
->>>>>>> 2.0.0
 
 JqueryEmitter.prototype.removeListener = function(type, listener) {
     if (-1 !== type.indexOf('.')) {        
@@ -6691,16 +6711,8 @@ var Hoodie = module.exports = (function() {
     extensions.push(extension);
   };
 
-<<<<<<< HEAD
-    // allow other modules to clean up local data & caches
-    account.trigger('cleanup');
-    authenticated = undefined;
-    setUsername(undefined);
-    setBearerToken(undefined);
-=======
   return Hoodie;
 })();
->>>>>>> 2.0.0
 
 },{"./hoodie/account":46,"./hoodie/connection":47,"./hoodie/id":48,"./hoodie/open":49,"./hoodie/remote":50,"./hoodie/request":51,"./hoodie/store":55,"./hoodie/task":59,"./lib":65,"./utils":80}],44:[function(_dereq_,module,exports){
 (function (global){
@@ -6855,21 +6867,8 @@ exports.anonymousSignUp = function(state) {
 };
 
 
-<<<<<<< HEAD
-      return withPreviousRequestsAborted('updateUsersDoc', function() {
-        var defer = getDefer();
-
-        account.request('PUT', userDocUrl(), options)
-        .done(defer.notify)
-        .then(handleChangeUsernameAndPasswordResponse(newUsername, newPassword || currentPassword))
-        .done(defer.resolve);
-
-        return defer.promise();
-      });
-=======
 // hasAccount
 // ---------------------
->>>>>>> 2.0.0
 
 //
 exports.hasAccount = function(state) {
@@ -6881,28 +6880,6 @@ exports.hasAccount = function(state) {
 // hasAnonymousAccount
 // ---------------------
 
-<<<<<<< HEAD
-    return function() {
-      disconnect();
-
-      if (newUsername) {
-        // note that if username has been changed, newPassword is the current password.
-        // We always change either the one, or the other.
-        return awaitCurrentAccountRemoved(currentUsername, newPassword).then( function() {
-
-          // we do signOut explicitly although signOut is build into hoodie.signIn to
-          // work around trouble in case of local changes. See
-          // https://github.com/hoodiehq/hoodie.js/issues/256
-          return account.signOut({silent:true, moveData: true}).then(function() {
-            return account.signIn(newUsername, newPassword, {moveData: true, silent: true});
-          });
-        });
-      } else {
-        return account.signIn(currentUsername, newPassword, {silent: true});
-      }
-    };
-  }
-=======
 // anonymous accounts get created when data needs to be
 // synced without the user having an account. That happens
 // automatically when the user creates a task, but can also
@@ -6915,7 +6892,6 @@ exports.hasAccount = function(state) {
 exports.hasAnonymousAccount = function(state) {
   return !!helpers.getAnonymousPassword(state);
 };
->>>>>>> 2.0.0
 
 // sign in with username & password
 // ----------------------------------
@@ -6962,6 +6938,7 @@ exports.signIn = function(state, username, password, options) {
     }
     if (!isReauthenticating && !options.moveData) {
       helpers.cleanup(state);
+      helpers.setBearerToken(state, state.newBearerToken);
     }
     if (isReauthenticating) {
       if (!isSilent) {
@@ -6974,6 +6951,8 @@ exports.signIn = function(state, username, password, options) {
       state.events.trigger('signin', newUsername, state.newHoodieId, options);
     }
   });
+
+  return promise;
 };
 
 // sign out
@@ -7198,7 +7177,7 @@ exports.changeUsername = function(state, currentPassword, newUsername) {
 
   if (newUsername !== currentUsername) {
     newUsername = newUsername || '';
-    return exports.changeUsernameAndPassword(state, currentPassword, newUsername.toLowerCase())
+    return helpers.changeUsernameAndPassword(state, currentPassword, newUsername.toLowerCase())
     .done( function() {
       helpers.setUsername(state, newUsername);
       state.events.trigger('changeusername', newUsername);
@@ -7272,7 +7251,7 @@ exports.anonymousSignIn = function(state) {
 // reauthenticate: force hoodie to reauthenticate
 exports.reauthenticate = function(state) {
   state.authenticated = undefined;
-  return exports.authenticate();
+  return state.hoodie.account.authenticate();
 };
 
 // setters
@@ -7283,6 +7262,15 @@ exports.setUsername = function(state, newUsername) {
 
   state.username = newUsername;
   return config.set('_account.username', newUsername);
+};
+
+exports.setBearerToken = function(state, newBearerToken) {
+  if (state.hoodie.account.bearerToken === newBearerToken) {
+    return;
+  }
+
+  state.hoodie.account.bearerToken = newBearerToken;
+  return config.set('_account.bearerToken', newBearerToken);
 };
 
 //
@@ -7392,17 +7380,6 @@ exports.delayedSignIn = function(state, username, password, options, defer) {
 // parse a successful sign in response from couchDB.
 // Response looks like:
 //
-<<<<<<< HEAD
-// When hoodie.remote is continuously syncing (default),
-// it will continuously  synchronize with local store,
-// otherwise sync, pull or push can be called manually
-//
-// Note that hoodieRemote must be initialized before the
-// API is available:
-//
-//     hoodieRemote(hoodie);
-//     hoodie.remote.init();
-=======
 //     {
 //         'ok': true,
 //         'name': 'test1',
@@ -7411,7 +7388,6 @@ exports.delayedSignIn = function(state, username, password, options, defer) {
 //             'confirmed'
 //         ]
 //     }
->>>>>>> 2.0.0
 //
 // we want to turn it into 'test1', 'mvu85hy' or reject the promise
 // in case an error occurred ('roles' array contains 'error' or is empty)
@@ -7422,9 +7398,11 @@ exports.handleSignInSuccess = function(state, options) {
   return function(response) {
     var newUsername;
     var newHoodieId;
+    var newBearerToken;
 
     newUsername = response.name.replace(/^user(_anonymous)?\//, '');
     newHoodieId = response.roles[0];
+    newBearerToken = response.bearerToken;
 
     //
     // if an error occurred, the userDB worker stores it to the $error attribute
@@ -7460,9 +7438,16 @@ exports.handleSignInSuccess = function(state, options) {
       });
     }
     state.authenticated = true;
-    state.newHoodieId = newHoodieId;
 
+    state.newHoodieId = newHoodieId;
+    state.newBearerToken = newBearerToken;
+
+    // TODO: remove setBearerToken & account.fetch here.
+    //       Find a better way to get user account properties
+    //       after sign in / sign up.
+    exports.setBearerToken(state, newBearerToken);
     state.hoodie.account.fetch(newUsername);
+
     return resolveWith(newUsername);
   };
 };
@@ -7603,25 +7588,16 @@ exports.upgradeAnonymousAccount = function(state, username, password) {
 //
 exports.handleFetchBeforeDestroySuccess = function(state) {
 
-  exports.disconnect();
+  exports.disconnect(state);
   state.userDoc._deleted = true;
 
-<<<<<<< HEAD
-    // account events
-    hoodie.on('account:signup', remote.connect);
-    hoodie.on('account:signup:anonymous', remote.connect);
-    hoodie.on('account:signin', remote.connect);
-    hoodie.on('account:signin:anonymous', remote.connect);
-    hoodie.on('account:changeusername', remote.connect);
-=======
   return exports.withPreviousRequestsAborted(state, 'updateUsersDoc', function() {
-    state.hoodie.account.request('PUT', exports.userDocUrl(), {
+    state.hoodie.account.request('PUT', exports.userDocUrl(state), {
       data: JSON.stringify(state.userDoc),
       contentType: 'application/json'
     });
   });
 };
->>>>>>> 2.0.0
 
 //
 // dependant on what kind of error we get, we want to ignore
@@ -7649,6 +7625,7 @@ exports.cleanup = function(state) {
   state.events.trigger('cleanup');
   state.authenticated = undefined;
   exports.setUsername(state, undefined);
+  exports.setBearerToken(state, undefined);
 
   return resolve();
 };
@@ -7748,7 +7725,7 @@ exports.sendChangeUsernameAndPasswordRequest = function(state, currentPassword, 
 
     return exports.withPreviousRequestsAborted(state, 'updateUsersDoc', function() {
       return state.hoodie.account.request('PUT', exports.userDocUrl(state), options)
-      .then(exports.handleChangeUsernameAndPasswordResponse(newUsername, newPassword || currentPassword));
+      .then(exports.handleChangeUsernameAndPasswordResponse(state, newUsername, newPassword || currentPassword));
     });
 
   };
@@ -7791,20 +7768,12 @@ exports.awaitCurrentAccountRemoved = function(state, username, password, defer) 
     defer = getDefer();
   }
 
-<<<<<<< HEAD
-    if (hoodie.account.bearerToken) {
-      defaults.headers = {
-        Authorization: 'Bearer ' + hoodie.account.bearerToken
-      };
-    }
-=======
   var requestOptions = {
     data: {
       name: exports.userTypeAndId(state, username),
       password: password
     }
   };
->>>>>>> 2.0.0
 
   exports.withPreviousRequestsAborted(state, 'signIn', function() {
     return state.hoodie.account.request('POST', '/_session', requestOptions);
@@ -7998,6 +7967,12 @@ module.exports = function(hoodie) {
   // check for pending password reset
   account.checkPasswordReset();
 
+  // init username
+  account.username = username;
+
+  // init bearer token
+  account.bearerToken = utils.config.get('_account.bearerToken');
+
   hoodie.account = account;
 };
 
@@ -8026,7 +8001,7 @@ var exports = module.exports = function(hoodie) {
   global.addEventListener('offline', hoodie.checkConnection, false);
 
   // start checking connection
-  hoodie.checkConnection();
+  setTimeout(hoodie.checkConnection);
 };
 
 // Check Connection
@@ -8170,8 +8145,11 @@ exports.open = function(hoodie, storeName, options) {
     name: storeName
   });
 
-  return hoodieRemoteStore(hoodie, options);
+  return exports.hoodieRemoteStore(hoodie, options);
 };
+
+// export for testing
+exports.hoodieRemoteStore = hoodieRemoteStore;
 
 },{"../lib/store/remote":72,"extend":40}],50:[function(_dereq_,module,exports){
 var utils = _dereq_('../utils');
@@ -8312,7 +8290,6 @@ var utils = _dereq_('../utils');
 var hoodiefyRequestErrorName = utils.hoodiefyRequestErrorName;
 var getDefer = utils.promise.defer;
 var rejectWith = utils.promise.rejectWith;
-var $ajax = global.jQuery.ajax;
 
 //
 // hoodie.request
@@ -8362,8 +8339,11 @@ exports.request = function(hoodie, type, url, options) {
   var jQueryPromise;
   options = options || {};
 
-
-  // if absolute path passed, set CORS headers
+  if (hoodie.account.bearerToken) {
+    defaults.headers = {
+      Authorization: 'Bearer ' + hoodie.account.bearerToken
+    };
+  }
 
   // if relative path passed, prefix with baseUrl
   if (!/^http/.test(url)) {
@@ -8386,7 +8366,7 @@ exports.request = function(hoodie, type, url, options) {
   // the piping, as for whatever reason the returned promise
   // does not have the `abort` method any more, maybe others
   // as well. See also http://bugs.jquery.com/ticket/14104
-  jQueryPromise = $ajax(extend(defaults, options))
+  jQueryPromise = global.jQuery.ajax(extend(defaults, options))
     .done(requestDefer.resolve)
     .fail(requestDefer.reject);
   var pipedPromise = requestPromise.then(
@@ -8626,7 +8606,7 @@ exports.end = function(state) {
     args = methodCall[1];
     defer = methodCall[2];
     localStore[method]
-      .bind(localStore, state)
+      .bind(localStore)
       .apply(localStore, args)
       .then(defer.resolve, defer.reject);
   }
@@ -8868,7 +8848,7 @@ exports.now = function() {
 
 
 // a semantic key consists of a valid type & id, separated by a "/"
-exports.SEMANTIC_ID_PATTERN = new RegExp(/^[a-z$][a-z0-9-]+\/[a-z0-9]+$/);
+exports.SEMANTIC_ID_PATTERN = new RegExp(/^[a-z$][a-z0-9-]+\/[a-z0-9-]+$/);
 exports.isSemanticKey = function(state, key) {
   return exports.SEMANTIC_ID_PATTERN.test(key);
 };
@@ -9019,15 +8999,15 @@ var exports = module.exports = function(hoodie) {
     idleTimeout: 2000
   };
 
-  var store = hoodieStoreApi(hoodie, {
+  var store = exports.hoodieStoreApi(hoodie, {
     // validate
     validate: exports.validate,
     backend: {
-      save: localStore.save.bind(null, state),
-      find: localStore.find.bind(null, state),
-      findAll: localStore.findAll.bind(null, state),
-      remove: localStore.remove.bind(null, state),
-      removeAll: localStore.removeAll.bind(null, state)
+      save: exports.localStore.save.bind(null, state),
+      find: exports.localStore.find.bind(null, state),
+      findAll: exports.localStore.findAll.bind(null, state),
+      remove: exports.localStore.remove.bind(null, state),
+      removeAll: exports.localStore.removeAll.bind(null, state)
     }
   });
 
@@ -9051,18 +9031,18 @@ var exports = module.exports = function(hoodie) {
   hoodie.on('remote:push', helpers.handlePushedObject.bind(null, state));
 
   // expose public API
-  // FIXME: must be setup before exports.bootstrapDirtyObjects as
+  // FIXME: must be setup before exports.bootstrapChangedObjects as
   //        it depends on state.hoodie.store ...
   hoodie.store = store;
 
-  exports.bootstrapDirtyObjects(state);
+  exports.bootstrapChangedObjects(state);
 };
 
 // bootstrapping dirty objects, to make sure
 // that removed objects get pushed after
 // page reload.
 //
-exports.bootstrapDirtyObjects = function(state) {
+exports.bootstrapChangedObjects = function(state) {
   var keys = localStorageWrapper.getItem('_dirty');
 
   if (!keys) {
@@ -9098,6 +9078,10 @@ exports.validate = function(object) {
     });
   }
 };
+
+// exports for testing
+exports.hoodieStoreApi = hoodieStoreApi;
+exports.localStore = localStore;
 
 },{"../../lib/error/object_id":62,"../../lib/error/object_type":63,"../../lib/store/api":68,"../../utils":80,"./api":52,"./bootstrap":53,"./helpers":54,"./localstore":56}],56:[function(_dereq_,module,exports){
 var helpers = _dereq_('./helpers');
@@ -9563,7 +9547,7 @@ exports.handleNewTask = function(state, object) {
     state.hoodie.store.remove('$' + object.type, object.id);
   });
 
-  return defer;
+  return defer.promise;
 };
 
 //
@@ -9582,7 +9566,7 @@ exports.handleAbortedTaskObject = function(state, taskObject) {
   state.hoodie.once('store:sync:' + type + ':' + id, defer.resolve);
   removePromise.fail(defer.reject);
 
-  return defer;
+  return defer.promise;
 };
 
 //
@@ -10317,7 +10301,7 @@ module.exports = function(hoodie, options) {
   // if `validate` returns nothing, the passed object is
   // valid. Otherwise it returns an error
   //
-  api.validate = state.validate = helpers.defaultValidate.bind(null, state);
+  api.validate = state.validate = helpers.defaultValidate.bind(null);
 
   if (typeof options.validate === 'function') {
     api.validate = state.validate = options.validate;
@@ -10365,6 +10349,7 @@ module.exports = {
 (function (global){
 var extend = _dereq_('extend');
 var utils = _dereq_('../../../utils');
+var getDefer = utils.promise.defer;
 var resolveWith = utils.promise.resolveWith;
 
 var helpers = _dereq_('./helpers');
@@ -10433,15 +10418,22 @@ exports.markAsKnownObject = function(state, object) {
 // start syncing. `remote.bootstrap()` will automatically start
 // pulling when `remote.connected` remains true.
 //
+var connectDefer;
 exports.connect = function(state, name) {
+  if (state.connected) {
+    return connectDefer.promise;
+  }
+  connectDefer = getDefer();
   if (name) {
     state.remoteName = name;
   }
   state.connected = true;
-  state.hoodie.remote.trigger('connect');
-  return state.hoodie.remote.bootstrap().then(function() {
-    state.hoodie.remote.push();
-  });
+  state.remote.trigger('connect');
+  state.remote.bootstrap().then(function() {
+    return state.remote.push();
+  }).then(connectDefer.resolve, connectDefer.reject);
+
+  return connectDefer.promise;
 };
 
 
@@ -10452,7 +10444,7 @@ exports.connect = function(state, name) {
 //
 exports.disconnect = function(state) {
   state.connected = false;
-  state.hoodie.remote.trigger('disconnect'); // TODO: spec that
+  state.remote.trigger('disconnect'); // TODO: spec that
   if (state.pullRequest) {
     state.pullRequest.abort();
   }
@@ -10461,6 +10453,7 @@ exports.disconnect = function(state) {
     state.pushRequest.abort();
   }
 
+  connectDefer = undefined;
 };
 
 
@@ -10496,8 +10489,8 @@ exports.getSinceNr = function(state) {
 //
 exports.bootstrap = function(state) {
   state.isBootstrapping = true;
-  state.hoodie.remote.trigger('bootstrap:start');
-  return state.hoodie.remote.pull()
+  state.remote.trigger('bootstrap:start');
+  return state.remote.pull()
     .done(helpers.handleBootstrapSuccess.bind(null, state))
     .fail(helpers.handleBootstrapError.bind(null, state));
 };
@@ -10511,9 +10504,9 @@ exports.bootstrap = function(state) {
 // and restart each 25 seconds.
 //
 exports.pull = function(state) {
-  state.pullRequest = state.hoodie.remote.request('GET', helpers.pullUrl(state));
+  state.pullRequest = state.remote.request('GET', helpers.pullUrl(state));
 
-  if (state.hoodie.remote.isConnected()) {
+  if (state.remote.isConnected()) {
     global.clearTimeout(state.pullRequestTimeout);
     state.pullRequestTimeout = global.setTimeout(state.restartPullRequest, 25000);
   }
@@ -10551,7 +10544,7 @@ exports.push = function(state, objects) {
 
     object = objects[i];
     helpers.addRevisionTo(state, object);
-    state.hoodie.remote.markAsKnownObject(object);
+    state.remote.markAsKnownObject(object);
     object = helpers.parseForRemote(state, object);
     objectsForRemote.push(object);
 
@@ -10559,7 +10552,7 @@ exports.push = function(state, objects) {
     // being triggered for the same object revisions
     state.pushedObjectRevisions[object._rev] = 1;
   }
-  state.pushRequest = state.hoodie.remote.request('POST', '/_bulk_docs', {
+  state.pushRequest = state.remote.request('POST', '/_bulk_docs', {
     data: {
       docs: objectsForRemote,
       new_edits: false
@@ -10569,7 +10562,7 @@ exports.push = function(state, objects) {
   state.pushRequest.done(function() {
     for (var i = 0; i < objects.length; i++) {
       delete objects[i]._revisions;
-      state.hoodie.remote.trigger('push', objects[i]);
+      state.remote.trigger('push', objects[i]);
     }
   });
   return state.pushRequest;
@@ -10581,7 +10574,7 @@ exports.push = function(state, objects) {
 // push objects, then pull updates.
 //
 exports.sync = function(state, objects) {
-  return state.hoodie.remote.push(objects).then(state.hoodie.remote.pull);
+  return state.remote.push(objects).then(state.remote.pull);
 };
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
@@ -10764,8 +10757,8 @@ exports.mapDocsFromFindAll = function(state, response) {
 // are no changes on remote.
 //
 exports.pullUrl = function(state) {
-  var since = state.hoodie.remote.getSinceNr();
-  if (state.hoodie.remote.isConnected() && !state.isBootstrapping) {
+  var since = state.remote.getSinceNr();
+  if (state.remote.isConnected() && !state.isBootstrapping) {
     return '/_changes?include_docs=true&since=' + since + '&heartbeat=10000&feed=longpoll';
   } else {
     return '/_changes?include_docs=true&since=' + since;
@@ -10792,8 +10785,8 @@ exports.restartPullRequest = function(state) {
 exports.handlePullSuccess = function(state, response) {
   exports.setSinceNr(state, response.last_seq);
   exports.handlePullResults(state, response.results);
-  if (state.hoodie.remote.isConnected()) {
-    return state.hoodie.remote.pull();
+  if (state.remote.isConnected()) {
+    return state.remote.pull();
   }
 };
 
@@ -10804,7 +10797,7 @@ exports.handlePullSuccess = function(state, response) {
 // then check for another change
 //
 exports.handlePullError = function(state, xhr, error) {
-  if (!state.hoodie.remote.isConnected()) {
+  if (!state.remote.isConnected()) {
     return;
   }
 
@@ -10812,8 +10805,8 @@ exports.handlePullError = function(state, xhr, error) {
     // Session is invalid. User is still login, but needs to reauthenticate
     // before sync can be continued
   case 401:
-    state.hoodie.remote.trigger('error:unauthenticated', error);
-    return state.hoodie.remote.disconnect();
+    state.remote.trigger('error:unauthenticated', error);
+    return state.remote.disconnect();
 
     // the 404 comes, when the requested DB has been removed
     // or does not exist yet.
@@ -10825,20 +10818,20 @@ exports.handlePullError = function(state, xhr, error) {
     // TODO: review / rethink that.
     //
   case 404:
-    return global.setTimeout(state.hoodie.remote.pull, 3000);
+    return global.setTimeout(state.remote.pull, 3000);
 
   case 500:
     //
     // Please server, don't give us these. At least not persistently
     //
-    state.hoodie.remote.trigger('error:server', error);
-    global.setTimeout(state.hoodie.remote.pull, 3000);
+    state.remote.trigger('error:server', error);
+    global.setTimeout(state.remote.pull, 3000);
     return state.hoodie.checkConnection();
   default:
     // usually a 0, which stands for timeout or server not reachable.
     if (xhr.statusText === 'abort') {
       // manual abort after 25sec. restart pulling changes directly when connected
-      return state.hoodie.remote.pull();
+      return state.remote.pull();
     } else {
 
       // oops. This might be caused by an unreachable server.
@@ -10846,7 +10839,7 @@ exports.handlePullError = function(state, xhr, error) {
       // heroku kills the request after ~30s.
       // we'll try again after a 3s timeout
       //
-      global.setTimeout(state.hoodie.remote.pull, 3000);
+      global.setTimeout(state.remote.pull, 3000);
       return state.hoodie.checkConnection();
     }
   }
@@ -10857,14 +10850,14 @@ exports.handlePullError = function(state, xhr, error) {
 //
 exports.handleBootstrapSuccess = function(state) {
   state.isBootstrapping = false;
-  state.hoodie.remote.trigger('bootstrap:end');
+  state.remote.trigger('bootstrap:end');
 };
 
 // ### handle error of initial bootstrapping from remote
 //
 exports.handleBootstrapError = function(state, error) {
   state.isBootstrapping = false;
-  state.hoodie.remote.trigger('bootstrap:error', error);
+  state.remote.trigger('bootstrap:error', error);
 };
 
 // ### handle changes from remote
@@ -10872,7 +10865,7 @@ exports.handleBootstrapError = function(state, error) {
 exports.handlePullResults = function(state, changes) {
   var doc, event, object;
 
-  var remote = state.hoodie.remote;
+  var remote = state.remote;
 
   for (var i = 0; i < changes.length; i++) {
     doc = changes[i].doc;
@@ -10888,7 +10881,7 @@ exports.handlePullResults = function(state, changes) {
     object = exports.parseFromRemote(state, doc);
 
     if (object._deleted) {
-      if (!state.hoodie.remote.isKnownObject(object)) {
+      if (!state.remote.isKnownObject(object)) {
         continue;
       }
       event = 'remove';
@@ -10968,16 +10961,18 @@ var api = _dereq_('./api');
 //
 
 module.exports = function(hoodie, options) {
-  var baseUrl;
-  var connected = false;
-  var prefix = '';
+  var internals = {
+    connected: false,
+    prefix: '',
+    baseUrl: undefined
+  };
 
   var state = {
     get baseUrl() {
-      return baseUrl;
+      return internals.baseUrl;
     },
     set baseUrl(input) {
-      baseUrl = input;
+      internals.baseUrl = input;
       remote.baseUrl = input;
     },
     // sync
@@ -10986,10 +10981,10 @@ module.exports = function(hoodie, options) {
     // `pull: true` or `push: true`.
     //
     get connected() {
-      return connected;
+      return internals.connected;
     },
     set connected(input) {
-      connected = input;
+      internals.connected = input;
       remote.connected = input;
     },
     // prefix
@@ -10997,10 +10992,10 @@ module.exports = function(hoodie, options) {
     // in public user stores are prefixed by '$public/'
     //
     get prefix() {
-      return prefix;
+      return internals.prefix;
     },
     set prefix(input) {
-      prefix = input;
+      internals.prefix = input;
       remote.prefix = input;
     },
 
@@ -11073,6 +11068,9 @@ module.exports = function(hoodie, options) {
     }
   }
 
+  // externalize current remote instance
+  state.remote = remote;
+
   return remote;
 };
 
@@ -11101,7 +11099,7 @@ exports.find = function(state, type, id) {
 
   path = '/' + encodeURIComponent(path);
 
-  return state.hoodie.remote.request('GET', path)
+  return state.remote.request('GET', path)
     .then(helpers.parseFromRemote.bind(null, state));
 };
 
@@ -11146,7 +11144,7 @@ exports.findAll = function(state, type) {
       (encodeURIComponent(endkey)) + '"';
   }
 
-  return state.hoodie.remote.request('GET', path)
+  return state.remote.request('GET', path)
     .then(helpers.mapDocsFromFindAll.bind(null, state))
     .then(helpers.parseAllFromRemote.bind(null, state));
 };
@@ -11167,7 +11165,7 @@ exports.save = function(state, object) {
 
   object = helpers.parseForRemote(state, object);
   path = '/' + encodeURIComponent(object._id);
-  return state.hoodie.remote.request('PUT', path, {
+  return state.remote.request('PUT', path, {
     data: object
   });
 };
@@ -11179,7 +11177,7 @@ exports.save = function(state, object) {
 // remove one object
 //
 exports.remove = function(state, type, id) {
-  return state.hoodie.remote.update(type, id, {
+  return state.remote.update(type, id, {
     _deleted: true
   });
 };
@@ -11191,7 +11189,7 @@ exports.remove = function(state, type, id) {
 // remove all objects, can be filtered by type
 //
 exports.removeAll = function(state, type) {
-  return state.hoodie.remote.updateAll(type, {
+  return state.remote.updateAll(type, {
     _deleted: true
   });
 };
@@ -11621,64 +11619,69 @@ exports.hasLocalStorage = function() {
 (function (global){
 /*jshint -W079 */
 var Promise = exports.Promise = (function() {
-  var PromiseClass;
   if (typeof global.Promise === 'function') {
-    PromiseClass = global.Promise;
-  } else {
-    PromiseClass = _dereq_('bluebird');
+    return global.Promise;
   }
-  PromiseClass.prototype.done = function done(callback) {
-    this.then(callback);
-    // var promise = this;
-    // this.then(function() {
-    //   try {
-    //     callback.apply(null, arguments);
-    //   } catch(e) {
-    //     debugger
-    //   }
-    // });
-    return this;
-  };
-  PromiseClass.prototype.fail = function fail(callback) {
-    this.then(null, callback);
-    // var promise = this;
-    // this.then(null, function() {
-    //   try {
-    //     callback.apply(null, arguments);
-    //   } catch(e) {
-    //     debugger
-    //   }
-    // });
-    return this;
-  };
-  PromiseClass.prototype.always = function always(callback) {
-    this.then(callback, callback);
-    return this;
-  };
-  PromiseClass.prototype.progress = function progress() {
-    console.log('NOTE: promise.progress is currently not working');
-    return this;
-  };
-  return PromiseClass;
+  return _dereq_('bluebird');
 })();
 
 module.exports = function Defer() {
-  var resolve, reject, promise;
-
-  promise = new Promise(function () {
-    resolve = arguments[0];
-    reject = arguments[1];
+  var defer = {};
+  defer.promise = new Promise(function (resolveCallback, rejectCallback) {
+    defer.resolve = function resolve() {
+      defer.notify = function noop () {};
+      resolveCallback.apply(null, arguments);
+    };
+    defer.reject = function reject() {
+      defer.notify = function noop () {};
+      rejectCallback.apply(null, arguments);
+    };
   });
 
-  return {
-    resolve: resolve,
-    reject: reject,
-    promise: promise,
-    notify: function() {
-      console.log('NOTE: defer.notify is currently not working');
-    }
+  // add done, fail, always, progress callbacks
+  wrapPromise(defer.promise);
+
+  defer.promise._progressCallbacks = [];
+  defer.notify = function notify() {
+    var args = Array.prototype.slice.call(arguments);
+    defer.promise._progressCallbacks.forEach(function(callback) {
+      callback.apply(null, args);
+    });
   };
+
+  return defer;
 };
+
+function wrapPromise (promise) {
+  if (promise._isHoodiePromise) {
+    return promise;
+  }
+  promise._isHoodiePromise = true;
+
+  promise.done = function done(callback) {
+    this.then(callback);
+    return this;
+  };
+  promise.fail = function fail(callback) {
+    this.then(null, callback);
+    return this;
+  };
+  promise.always = function always(callback) {
+    this.then(callback, callback);
+    return this;
+  };
+  promise.progress = function progress(callback) {
+    if (this._progressCallbacks) {
+      this._progressCallbacks.push(callback);
+    }
+    return this;
+  };
+  promise.then = function then (onResolve, onReject) {
+    promise = Promise.prototype.then.call(this, onResolve, onReject);
+    wrapPromise(promise);
+    return promise;
+  };
+}
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"bluebird":3}],83:[function(_dereq_,module,exports){
