@@ -79,17 +79,26 @@ exports.findAll = function(state, type) {
 // save a new object. If it existed before, all properties
 // will be overwritten
 //
-exports.save = function(state, object) {
-  var path;
+exports.save = function(state, properties) {
+  var remoteProperties, path;
 
-  if (!object.id) {
-    object.id = generateId();
+  if (!properties.id) {
+    properties.id = generateId();
   }
 
-  object = helpers.parseForRemote(state, object);
-  path = '/' + encodeURIComponent(object._id);
+  // add timestamps and user id
+  properties.createdBy = properties.createdBy || state.hoodie.id();
+  properties.updatedAt = new Date().toJSON();
+  properties.createdAt = properties.createdAt || properties.updatedAt;
+
+
+  remoteProperties = helpers.parseForRemote(state, properties);
+  path = '/' + encodeURIComponent(remoteProperties._id);
   return state.remote.request('PUT', path, {
-    data: object
+    data: remoteProperties
+  }).then(function(response) {
+    properties._rev = response.rev;
+    return properties;
   });
 };
 

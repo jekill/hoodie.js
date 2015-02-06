@@ -1,13 +1,14 @@
+/*jshint -W079 */
 var extend = require('extend');
 
 var helpers = require('./helpers');
 
 var utils = require('../../../utils');
 var promise = utils.promise;
-var getDefer = promise.defer;
 var rejectWith = promise.rejectWith;
 var resolveWith = promise.resolveWith;
 var isPromise = promise.isPromise;
+var Promise = promise.Promise;
 
 // Save
 // --------------
@@ -61,7 +62,26 @@ exports.add = function(state, type, properties, options) {
 
   options = options || {};
 
-  return exports.save(state, type, properties.id, properties, options);
+  if (! properties.id) {
+    return exports.save(state, type, properties.id, properties, options);
+  }
+
+  return exports.find(state, type, properties.id)
+  .then(function(object) {
+    return rejectWith({
+      name: 'HoodieConflictError',
+      message: '"{{type}}" with id "{{id}}" already exists',
+      type: object.type,
+      id: object.id
+    });
+  })
+  .catch(function(error) {
+    if (error.name === 'HoodieNotFoundError') {
+      return exports.save(state, type, properties.id, properties, options);
+    }
+
+    throw error;
+  });
 };
 
 
@@ -223,35 +243,29 @@ exports.updateAll = function(state, filterOrObjects, objectUpdate, options) {
     promise = filterOrObjects;
     break;
   case $.isArray(filterOrObjects):
-    promise = getDefer().resolve(filterOrObjects);
+    promise = resolveWith(filterOrObjects);
     break;
   default:
     // e.g. null, update all
     promise = exports.findAll(state);
+    options = objectUpdate;
+    objectUpdate = filterOrObjects;
   }
 
   promise = promise.then(function(objects) {
     // now we update all objects one by one and return a promise
     // that will be resolved once all updates have been finished
-    var object, _updatePromises;
+    var updatePromises;
 
     if (!$.isArray(objects)) {
       objects = [objects];
     }
 
-    _updatePromises = (function() {
-      var _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = objects.length; _i < _len; _i++) {
-        object = objects[_i];
-        _results.push(exports.update(state, object.type, object.id, objectUpdate, options));
-      }
-      return _results;
-    })();
-
-    return $.when.apply(null, _updatePromises).then(function() {
-      return Array.prototype.slice.call(arguments);
+    updatePromises = objects.map(function(object) {
+      return exports.update(state, object.type, object.id, objectUpdate, options);
     });
+
+    return Promise.all(updatePromises);
   });
 
   return helpers.decoratePromise(state, promise);

@@ -1,3 +1,4 @@
+/*jshint -W079 */
 var helpers = require('./helpers');
 
 var utils = require('../../utils');
@@ -9,6 +10,7 @@ var promise = utils.promise;
 var getDefer = promise.defer;
 var rejectWith = promise.rejectWith;
 var resolveWith = promise.resolveWith;
+var Promise = promise.Promise;
 
 // LocalStore
 // ============
@@ -145,7 +147,9 @@ exports.find = function(state, type, id) {
     if (!object) {
       return rejectWith({
         name: 'HoodieNotFoundError',
-        message: '"{{type}}" with id "{{id}}" could not be found'
+        message: '"{{type}}" with id "{{id}}" could not be found',
+        type: type,
+        id: id
       });
     }
     return resolveWith(object);
@@ -287,7 +291,9 @@ exports.remove = function(state, type, id, options) {
   if (!object) {
     return rejectWith({
       name: 'HoodieNotFoundError',
-      message: '"{{type}}" with id "{{id}}"" could not be found'
+      message: '"{{type}}" with id "{{id}}" could not be found',
+      type: type,
+      id: id
     });
   }
 
@@ -318,14 +324,12 @@ exports.remove = function(state, type, id, options) {
 // Otherwise remove it from Store.
 exports.removeAll = function(state, type, options) {
   return state.hoodie.store.findAll(type).then(function(objects) {
-    var object, _i, _len, results;
+    var removePromises;
 
-    results = [];
+    removePromises = objects.map(function(object) {
+      return state.hoodie.store.remove(object.type, object.id, options);
+    });
 
-    for (_i = 0, _len = objects.length; _i < _len; _i++) {
-      object = objects[_i];
-      results.push(state.hoodie.store.remove(object.type, object.id, options));
-    }
-    return results;
+    return Promise.all(removePromises);
   });
 };
