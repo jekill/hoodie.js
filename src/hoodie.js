@@ -17,7 +17,6 @@
 //     hoodie = new Hoodie
 //
 var Hoodie = module.exports = (function() {
-
   // for plugins
   var lib = require('./lib');
   var utils = require('./utils');

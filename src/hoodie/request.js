@@ -24,11 +24,11 @@ var rejectWith = utils.promise.rejectWith;
 // * HoodieUnauthorizedError
 // * HoodieConflictError
 // * HoodieServerError
-var exports = module.exports = function(hoodie) {
-  //
-  // public API
-  //
-  hoodie.request = exports.request.bind(null, hoodie);
+var exports = module.exports = function (hoodie) {
+    //
+    // public API
+    //
+    hoodie.request = exports.request.bind(null, hoodie);
 };
 
 // Hoodie backend listens to requests prefixed by /_api,
@@ -43,86 +43,93 @@ var exports = module.exports = function(hoodie) {
 //
 var API_PATH = '/_api';
 
-exports.request = function(hoodie, type, url, options) {
-  var defaults = {
-    type: type,
-    dataType: 'json'
-  };
-  var requestDefer = getDefer();
-  var requestPromise = requestDefer.promise;
-  var jQueryPromise;
-  options = options || {};
-
-  if (hoodie.account.bearerToken) {
-    defaults.headers = {
-      Authorization: 'Bearer ' + hoodie.account.bearerToken
+exports.request = function (hoodie, type, url, options) {
+    var defaults = {
+        type: type,
+        dataType: 'json'
     };
-  }
+    var requestDefer = getDefer();
+    var requestPromise = requestDefer.promise;
+    var jQueryPromise;
+    options = options || {};
 
-  // if relative path passed, prefix with baseUrl
-  if (!/^http/.test(url)) {
-    url = (hoodie.baseUrl || '') + API_PATH + url;
-  }
+    if (hoodie.account.bearerToken) {
+        defaults.headers = {
+            Authorization: 'Bearer ' + hoodie.account.bearerToken
+        };
+    }
 
-  // if url is cross domain, set CORS headers
-  if (/^http/.test(url)) {
-    defaults.xhrFields = {
-      withCredentials: true
-    };
-    defaults.crossDomain = true;
-  }
 
-  defaults.url = url;
+    // if relative path passed, prefix with baseUrl
+    if (!/^http/.test(url)) {
+        url = (hoodie.baseUrl || '') + API_PATH + url;
+    }
 
-  // we are piping the result of the request to return a nicer
-  // error if the request cannot reach the server at all.
-  // We can't return the promise of ajax directly because of
-  // the piping, as for whatever reason the returned promise
-  // does not have the `abort` method any more, maybe others
-  // as well. See also http://bugs.jquery.com/ticket/14104
-  jQueryPromise = global.jQuery.ajax(extend(defaults, options))
-    .done(requestDefer.resolve)
-    .fail(requestDefer.reject);
-  var pipedPromise = requestPromise.then(
-    null,
-    exports.handleRequestError.bind(null, hoodie)
-  );
-  pipedPromise.abort = jQueryPromise.abort;
+    // if url is cross domain, set CORS headers
+    if (/^http/.test(url)) {
+        defaults.xhrFields = {
+            withCredentials: true
+        };
+        defaults.crossDomain = true;
+    }
 
-  return pipedPromise;
+    defaults.url = url;
+
+
+    if ((!defaults.headers || !hoodie.account.bearerToken ) && hoodie.account.oauth.hasToken()) {
+        defaults.headers = defaults.headers || {};
+        defaults.headers['Authorization'] = hoodie.account.oauth.mkAuthenticateeHeaderValue(hoodie, url, type);
+    }
+
+    // we are piping the result of the request to return a nicer
+    // error if the request cannot reach the server at all.
+    // We can't return the promise of ajax directly because of
+    // the piping, as for whatever reason the returned promise
+    // does not have the `abort` method any more, maybe others
+    // as well. See also http://bugs.jquery.com/ticket/14104
+    jQueryPromise = global.jQuery.ajax(extend(defaults, options))
+        .done(requestDefer.resolve)
+        .fail(requestDefer.reject);
+    var pipedPromise = requestPromise.then(
+        null,
+        exports.handleRequestError.bind(null, hoodie)
+    );
+    pipedPromise.abort = jQueryPromise.abort;
+
+    return pipedPromise;
 };
 
 //
 //
 //
-exports.handleRequestError = function(hoodie, xhr) {
-  var error;
+exports.handleRequestError = function (hoodie, xhr) {
+    var error;
 
-  // handle manual abort of request
-  if (xhr.statusText === 'abort') {
+    // handle manual abort of request
+    if (xhr.statusText === 'abort') {
 
-    return rejectWith({
-      name: 'HoodieConnectionAbortError',
-      message: 'Request has been aborted',
-    });
-  }
-
-  try {
-    error = exports.parseErrorFromResponse(xhr);
-  } catch (_error) {
-
-    if (xhr && xhr.responseText) {
-      error = xhr.responseText;
-    } else {
-      error = {
-        name: 'HoodieConnectionError',
-        message: 'Could not connect to Hoodie server at {{url}}.',
-        url: hoodie.baseUrl || '/'
-      };
+        return rejectWith({
+            name: 'HoodieConnectionAbortError',
+            message: 'Request has been aborted',
+        });
     }
-  }
 
-  return rejectWith(error);
+    try {
+        error = exports.parseErrorFromResponse(xhr);
+    } catch (_error) {
+
+        if (xhr && xhr.responseText) {
+            error = xhr.responseText;
+        } else {
+            error = {
+                name: 'HoodieConnectionError',
+                message: 'Could not connect to Hoodie server at {{url}}.',
+                url: hoodie.baseUrl || '/'
+            };
+        }
+    }
+
+    return rejectWith(error);
 };
 
 //
@@ -139,32 +146,32 @@ exports.handleRequestError = function(hoodie, xhr) {
 
 // map CouchDB HTTP status codes to Hoodie Errors
 exports.HTTP_STATUS_ERROR_MAP = {
-  400: 'HoodieRequestError', // bad request
-  401: 'HoodieUnauthorizedError',
-  403: 'HoodieRequestError', // forbidden
-  404: 'HoodieNotFoundError', // forbidden
-  409: 'HoodieConflictError',
-  412: 'HoodieConflictError', // file exist
-  500: 'HoodieServerError'
+    400: 'HoodieRequestError', // bad request
+    401: 'HoodieUnauthorizedError',
+    403: 'HoodieRequestError', // forbidden
+    404: 'HoodieNotFoundError', // forbidden
+    409: 'HoodieConflictError',
+    412: 'HoodieConflictError', // file exist
+    500: 'HoodieServerError'
 };
 
-exports.parseErrorFromResponse = function(xhr) {
-  var error = JSON.parse(xhr.responseText);
-  // get error name
-  error.name = exports.HTTP_STATUS_ERROR_MAP[xhr.status];
+exports.parseErrorFromResponse = function (xhr) {
+    var error = JSON.parse(xhr.responseText);
+    // get error name
+    error.name = exports.HTTP_STATUS_ERROR_MAP[xhr.status];
 
-  if (!error.name) {
-    error.name = hoodiefyRequestErrorName(error.error);
-  }
+    if (!error.name) {
+        error.name = hoodiefyRequestErrorName(error.error);
+    }
 
-  // store status & message
-  error.status = xhr.status;
-  error.message = error.reason || '';
-  error.message = error.message.charAt(0).toUpperCase() + error.message.slice(1);
+    // store status & message
+    error.status = xhr.status;
+    error.message = error.reason || '';
+    error.message = error.message.charAt(0).toUpperCase() + error.message.slice(1);
 
-  // cleanup
-  delete error.error;
-  delete error.reason;
+    // cleanup
+    delete error.error;
+    delete error.reason;
 
-  return error;
+    return error;
 };
