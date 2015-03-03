@@ -416,6 +416,7 @@ exports.cleanup = function(state) {
   state.authenticated = undefined;
   exports.setUsername(state, undefined);
   exports.setBearerToken(state, undefined);
+  state.account.oauth.clearUserKey();
 
   return resolve();
 };

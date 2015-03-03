@@ -48,8 +48,12 @@ exports.authenticate = function (state) {
         console.log(result.userCtx);
     }).fail(defer.reject);
     return defer.promise;
-
 };
+
+exports.clearUserKey=function(state){
+    config.set('_oauth_user_key', undefined);
+    config.set('_oauth_user_secret', undefined);
+}
 
 exports.setConsumerKey = function (key) {
     config.set('_oauth_consumer_key', key);
@@ -82,7 +86,8 @@ exports.setUserSecret = function (secret) {
 exports.mkAuthenticateeHeaderValue = function (hoodie, url, method) {
     method = method || "GET";
     url = url.replace(hoodie.baseUrl + "/_api", '');
-    url = "http://127.0.0.1:6003" + url;
+    //url = "http://127.0.0.1:6003" + url;
+    url = "http://127.0.0.1:5984" + url;
     console.log(url);
     var oauth = new OAuth.OAuth(
         //hoodie.baseUrl + '/_session', hoodie.baseUrl + '/_session',
