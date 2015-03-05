@@ -236,14 +236,15 @@ exports.handlePullError = function(state, xhr, error) {
     // TODO: review / rethink that.
     //
   case 404:
-    return global.setTimeout(state.remote.pullSilently, 3000);
+    //return global.setTimeout(state.remote.pullSilently, 3000);
+    return global.setTimeout(function(){exports.pullSilently(state)}, 3000);
 
   case 500:
     //
     // Please server, don't give us these. At least not persistently
     //
     state.remote.trigger('error:server', error);
-    global.setTimeout(state.remote.pullSilently, 3000);
+    //global.setTimeout(state.remote.pullSilently, 3000);
     return state.hoodie.checkConnection();
   default:
     // usually a 0, which stands for timeout or server not reachable.
@@ -257,7 +258,8 @@ exports.handlePullError = function(state, xhr, error) {
       // heroku kills the request after ~30s.
       // we'll try again after a 3s timeout
       //
-      global.setTimeout(state.remote.pullSilently, 3000);
+      //global.setTimeout(state.remote.pullSilently, 3000);
+      global.setTimeout(function(){exports.pullSilently(state)}, 3000);
       return state.hoodie.checkConnection();
     }
   }
